@@ -1,0 +1,1 @@
+CREATE OR REPLACE TABLE rrhh_raw as SELECT * FROM sqlite_conn.empleados 
