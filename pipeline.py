@@ -35,5 +35,10 @@ def main():
 
     print("####### Validacion #######")
 
+    conn.execute(read_sql("validations.sql"))
+
+    print(f"Valores Validados: ",count(table_name="rrhh_validos",con=conn))
+    print(f"Valores Invalidos: ",count(table_name="rrhh_rechazados",con=conn))
+
 if __name__ == "__main__":
     main()

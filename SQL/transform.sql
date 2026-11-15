@@ -12,4 +12,4 @@ AND units IS NOT NULL
 AND unit_price > 0
 AND unit_price IS NOT NULL
 AND revenue > 0
-AND revenue IS NOT NULL;
+AND revenue IS NOT NULL;    

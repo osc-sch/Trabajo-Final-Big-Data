@@ -202,7 +202,7 @@ def _():
 def _(engine, mo):
     _df = mo.sql(
         f"""
-        SELECT * FROM rrhh_raw
+        select * from rrhh_rechazados
         """,
         engine=engine
     )
