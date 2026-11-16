@@ -1,3 +1,4 @@
 env/
 __marimo__
 rrhh.duckdb
+__pycache__

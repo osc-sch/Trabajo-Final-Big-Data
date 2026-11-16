@@ -1,6 +1,7 @@
 import pandas as pd
 import duckdb
 from pathlib import Path
+from SQL.transform import transform
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"/ "rrhh.sqlite"
@@ -17,7 +18,7 @@ def read_sql(fielname: str):
 
 def count(table_name: str,con):
     try:
-        return con.execute(f"SELECT COUNT(*) FROM {table_name}").fetchone()
+        return con.execute(f"SELECT COUNT(*) FROM {table_name}").fetchall()
     except Exception as e:
         print(f"Hubo un error al ejecutar el count ",str(e))
 
@@ -39,6 +40,27 @@ def main():
 
     print(f"Valores Validados: ",count(table_name="rrhh_validos",con=conn))
     print(f"Valores Invalidos: ",count(table_name="rrhh_rechazados",con=conn))
+
+    print("####### Transformacion #######")
+
+    df_final = transform(conn)
+
+    print(f"Valores Trnasformados: ",len(df_final))
+
+    print("####### Carga #######")
+
+    conn.register("empleados_finales", df_final)
+
+    try:
+        df_rrhh = conn.execute(read_sql("export.sql")).df()
+    finally:
+        conn.unregister("empleados_finales")
+
+    print("Valores Exportados:", count(table_name="rrhh_final", con=conn))
+
+    df_rrhh.to_parquet(str(OUTPUT_DIR / "rrhh_final.parquet"))
+    
+
 
 if __name__ == "__main__":
     main()
