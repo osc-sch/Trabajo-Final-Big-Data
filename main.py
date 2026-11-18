@@ -199,10 +199,96 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(engine, mo):
+def _(mo):
+    mo.md(r"""
+    ## 💼 Preguntas de negocio
+
+    1. ¿Cual es el salario promedio por departamento?
+
+    2. ¿Cuanto es la masa salarial total de la empresa?
+
+    3. ¿Cuantos empleados hay por modalidad de trabajo?
+
+    4. ¿Cuantos empleados ingresaron por año?
+
+    5. ¿Cuales son los 3 cargos con mejor salario promedio?
+    """)
+    return
+
+
+@app.cell
+def _(engine, mo, rrhh_final):
     _df = mo.sql(
         f"""
-        select * from rrhh_transformados
+        --1. ¿Cual es el salario promedio por departamento?
+        SELECT departamento,
+               ROUND(AVG(CAST(salario AS DOUBLE)), 2) AS salario_promedio
+        FROM rrhh_final
+        GROUP BY departamento
+        ORDER BY salario_promedio DESC;
+        """,
+        engine=engine
+    )
+    return
+
+
+@app.cell
+def _(engine, mo, rrhh_final):
+    _df = mo.sql(
+        f"""
+        --2. ¿Cuanto es la masa salarial total de la empresa?
+        SELECT SUM(CAST(salario AS DOUBLE)) AS masa_salarial_total
+        FROM rrhh_final;
+        """,
+        engine=engine
+    )
+    return
+
+
+@app.cell
+def _(engine, mo, rrhh_final):
+    _df = mo.sql(
+        f"""
+        --3. ¿Cuantos empleados hay por modalidad de trabajo?
+        SELECT modalidad,
+               COUNT(*) AS cantidad_empleados
+        FROM rrhh_final
+        GROUP BY modalidad
+        ORDER BY cantidad_empleados DESC;
+        """,
+        engine=engine
+    )
+    return
+
+
+@app.cell
+def _(engine, mo, rrhh_final):
+    _df = mo.sql(
+        f"""
+        --4. ¿Cuantos empleados ingresaron por año?
+        SELECT EXTRACT(year FROM TRY_STRPTIME(CAST(fecha_ingreso AS VARCHAR),
+                                              ['%d/%m/%Y', '%Y-%m-%d'])) AS anio,
+               COUNT(*) AS ingresos
+        FROM rrhh_final
+        GROUP BY anio
+        ORDER BY anio;
+        """,
+        engine=engine
+    )
+    return
+
+
+@app.cell
+def _(engine, mo, rrhh_final):
+    _df = mo.sql(
+        f"""
+        --5 .¿Cuales son los 3 cargos con mejor salario promedio?
+        SELECT cargo,
+               ROUND(AVG(CAST(salario AS DOUBLE)), 2) AS salario_promedio
+        FROM rrhh_final
+        GROUP BY cargo
+        ORDER BY salario_promedio DESC
+        LIMIT 3;
         """,
         engine=engine
     )
