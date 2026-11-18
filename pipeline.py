@@ -1,7 +1,7 @@
 import pandas as pd
 import duckdb
 from pathlib import Path
-from SQL.transform import transform
+from SQL.transform2 import transform
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"/ "rrhh.sqlite"
@@ -44,6 +44,7 @@ def main():
     print("####### Transformacion #######")
 
     df_final = transform(conn)
+
 
     print(f"Valores Trnasformados: ",len(df_final))
 

@@ -66,4 +66,8 @@ def transform(conn):
 
     df_corregidos = pd.concat([df_validos, df_rechazados], ignore_index=True)
 
+    print("Valores Duplicados eliminados",df_corregidos.duplicated().sum())
+
+    df_corregidos = df_corregidos.drop_duplicates(subset=['id_empleado'])
+
     return df_corregidos
