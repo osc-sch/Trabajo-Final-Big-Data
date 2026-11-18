@@ -26,7 +26,7 @@ def count(table_name: str,con):
 def main():
     conn = duckdb.connect("rrhh.duckdb")
     # primero se debe conectar con el sqlite 
-    conn.execute("ATTACH OR REPLACE (?) AS sqlite_conn (TYPE SQLITE, READ_ONLY);",[str(DATA_DIR)])
+    conn.execute(f"ATTACH OR REPLACE '{str(DATA_DIR)}' AS sqlite_conn (TYPE SQLITE, READ_ONLY);")
 
     print("####### Extraccion #######")
 
